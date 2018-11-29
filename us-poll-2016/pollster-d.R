@@ -21,3 +21,10 @@ errors <- pollster_results %>% mutate (errors=d_hat-0.021)
 errors %>% ggplot(aes(x=pollster,y=errors)) + 
   geom_point() +
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+# Add variable called `error` to the object `polls` that contains the difference between d_hat and the actual difference on election day. Then make a plot of the error stratified by pollster, but only for pollsters who took 5 or more polls.
+polls %>% mutate(errors=(rawpoll_clinton-rawpoll_trump)/100-0.021) %>% 
+  group_by(pollster) %>% 
+  filter(n()>5) %>% 
+  ggplot(aes(pollster,errors)) + geom_point() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
