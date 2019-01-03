@@ -27,4 +27,24 @@ result1 <- mean(y_hat1 == y_test)
   heights %>% group_by(sex) %>% summarise(mean(height),sd(height))
   #We build an algorithm that classify heights higher than 62 inch (2 sd lower than mean) as male
   y_hat2 <- ifelse(x_test>62,'Male','Female') %>% factor()
-  #Assess this algorithm by 
+  #Assess this algorithm by overall accuracy
+  result2 <- mean(y_hat2 == y_test)
+
+#algorighm2 - determine a better cutoff
+  #Generate a cutoff vector - length of 20 from female height to male height 
+  femaleheight <- heights %>% filter(sex=='Female')
+  femalemeanheight <- mean(femaleheight$height)
+  maleheight <- heights %>% filter(sex=='Male')
+  malemeanheight <- mean(maleheight$height)
+  cutoff <- seq(from=61,to=70,length.out = 50)
+  #Predict
+        cutoffcompare <- function(cutoff=...){
+          testresult <- ifelse(x_test>cutoff,'Male','Female')
+          overallaccuracy = mean (testresult == y_test)
+          return(overallaccuracy)
+        }
+  accuracy <- sapply(cutoff,cutoffcompare)
+  predictionresult <- data.frame(cutoff,accuracy)
+  predictionresult %>% ggplot(aes(cutoff,accuracy)) + geom_point() + geom_line()
+
+  
