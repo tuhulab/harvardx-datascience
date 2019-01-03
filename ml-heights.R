@@ -8,7 +8,7 @@ y <- heights$sex
 
 #split data1 - generate index
 set.seed(1)
-train_index <- createDataPartition(y,times=1,p=.8,list=FALSE)
+train_index <- createDataPartition(y,times=1,p=.5,list=FALSE)
 
 #split data2 - data reshaping
 x_train <- x[train_index]
@@ -30,7 +30,7 @@ result1 <- mean(y_hat1 == y_test)
   #Assess this algorithm by overall accuracy
   result2 <- mean(y_hat2 == y_test)
 
-#algorighm2 - determine a better cutoff
+#algorithm2 - determine a better cutoff
   #Generate a cutoff vector - length of 20 from female height to male height 
   femaleheight <- heights %>% filter(sex=='Female')
   femalemeanheight <- mean(femaleheight$height)
@@ -39,12 +39,30 @@ result1 <- mean(y_hat1 == y_test)
   cutoff <- seq(from=61,to=70,length.out = 50)
   #Predict
         cutoffcompare <- function(cutoff=...){
-          testresult <- ifelse(x_test>cutoff,'Male','Female')
-          overallaccuracy = mean (testresult == y_test)
+          testresult <- ifelse(x_train>cutoff,'Male','Female') %>% factor()
+          overallaccuracy = mean (testresult == y_train)
           return(overallaccuracy)
         }
   accuracy <- sapply(cutoff,cutoffcompare)
   predictionresult <- data.frame(cutoff,accuracy)
   predictionresult %>% ggplot(aes(cutoff,accuracy)) + geom_point() + geom_line()
+  
+  #The best prediction result we can achieve is 
+  max(accuracy)
+  optimalcutoff <- cutoff[which.max(accuracy)]
+  
+  #check the cutoff in test set
+  y_hat3 <- ifelse(x_test>optimalcutoff,'Male','Female') %>% factor()
+  mean(y_hat3==y_test)
 
+#assess algorithm
+  table(predicted=y_hat3,actual=y_test)
+
+  result <- data.frame(y_test,y_hat3) %>% mutate(accuracy=y_test==y_hat3) %>% group_by(y_test) %>% summarise(mean(accuracy))
+  print(result)
+
+  prev_train <- mean(y_train=='Male');print(prev)
+  prev_test <- mean(y_test=='Male');print(prev)
+
+#data is biased. prediction is biased. overall accuracy is NOT enough to represent the 'quality' of prediction.
   
