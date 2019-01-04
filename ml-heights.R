@@ -1,5 +1,6 @@
 library(dslabs)
 library(caret)
+library(tidyverse)
 library(e1071)
 data(heights)
 
@@ -37,7 +38,8 @@ result1 <- mean(y_hat1 == y_test)
   femalemeanheight <- mean(femaleheight$height)
   maleheight <- heights %>% filter(sex=='Male')
   malemeanheight <- mean(maleheight$height)
-  cutoff <- seq(from=61,to=70,length.out = 50)
+  cutoff <- seq(from=61,to=70,length.out = 500)
+  #cutoff <- seq(61,72)
   #Predict
         cutoffcompare <- function(cutoff=...){
           testresult <- ifelse(x_train>cutoff,'Male','Female') %>% factor()
@@ -62,10 +64,26 @@ result1 <- mean(y_hat1 == y_test)
   result <- data.frame(y_test,y_hat3) %>% mutate(accuracy=y_test==y_hat3) %>% group_by(y_test) %>% summarise(mean(accuracy))
   print(result)
 
-  prev_train <- mean(y_train=='Male');print(prev)
-  prev_test <- mean(y_test=='Male');print(prev)
+  prev_train <- mean(y_train=='Male');print(prev_train)
+  prev_test <- mean(y_test=='Male');print(prev_test)
 
 #data is biased. prediction is biased. overall accuracy is NOT enough to represent the 'quality' of prediction.
 #sensitivity and specificity
   confusionMatrix(data = y_hat3,reference=y_test)
+
+#keep sensitivity & specificity in one variable is also importnat for optimization, e.g. F1.
+#This time we want to achieve best F1 value rather than best overall accuracy.
+  cutoffcompare <- function(cutoff=...){
+    y_hat4 <- ifelse(x_train>cutoff,'Male','Female') %>% factor()
+    fvalue <- F_meas(y_hat4,reference = factor(y_train))
+    return(fvalue)}
+  fvalue <- sapply(cutoff,cutoffcompare)
+  predictionresult2 <- data.frame(cutoff,fvalue)
+  predictionresult2 %>% ggplot(aes(cutoff,fvalue)) + geom_point() + geom_line()
   
+  print(max(fvalue)) 
+  cutoff[which.max(fvalue)]
+#be careful of train/test set
+  
+  
+#plot the ROC curve
