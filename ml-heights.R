@@ -1,5 +1,6 @@
 library(dslabs)
 library(caret)
+library(e1071)
 data(heights)
 
 #extract features and outcomes
@@ -65,4 +66,6 @@ result1 <- mean(y_hat1 == y_test)
   prev_test <- mean(y_test=='Male');print(prev)
 
 #data is biased. prediction is biased. overall accuracy is NOT enough to represent the 'quality' of prediction.
+#sensitivity and specificity
+  confusionMatrix(data = y_hat3,reference=y_test)
   
