@@ -13,7 +13,7 @@ filename <- 'murders.csv'
 fullpath <- file.path(path,filename)
 fullpath1 <- paste(path,filename,sep='/')
 identical(fullpath,fullpath1)
-#in R, file.path is used insted of paste due to convenience
+#in R, file.path is used insted of paste due to convenience (in different OS, different path formate)
 
 #copy files
 file.copy(from = fullpath, to = getwd())
@@ -72,3 +72,18 @@ head(wide_data)
 tidy_data_by_user <- wide_data %>% gather(year,fertility,-country)
 head(tidy_data)
 plotapply(tidy_data_by_user)
+
+#In real life, data could be formated even worse
+path <- system.file('extdata',package='dslabs')
+list.files(path)
+filename <- 'life-expectancy-and-fertility-two-countries-example.csv'
+fullpath <- file.path(path,filename)
+#read
+wide_data2 <- read_csv(fullpath)
+#data reshape
+tidy_data_2 <- wide_data2 %>% gather(key,value,-country)
+tidy_data_2 %>% separate(key,c('year','variable_name'),'_')
+tidy_data <- tidy_data_2 %>% separate(key,c('year','variable_name'),'_',extra='merge') %>% spread(variable_name,value)
+tidy_data_2 %>% separate(key,c('year','first_variable_name','second_variable_name'),fill='right') %>% 
+  unite(col = variable_name,first_variable_name,second_variable_name,sep='_') %>% 
+  spread(variable_name,value) %>% rename(fertility=fertility_NA)
