@@ -45,3 +45,30 @@ download.file(url, destfile = file.path(getwd(),'murders_through_url.csv'))
 path_url <- file.path(getwd(),'murders_through_url.csv')
 murders_url_local <- read_csv(path_url)
 identical(murders_url,murders_url_local)
+
+#reshape data (practise of gather, spreed, separate)
+
+#the tidy data
+data('gapminder')
+tidy_data <- gapminder %>% 
+  filter(country %in% c('Germany','South Korea')) %>%
+  select(country,year,fertility)
+head(tidy_data)
+#plot
+tidy_data %>% ggplot(aes(x=year,y=fertility,color=country)) + 
+  geom_point() 
+
+plotapply <- function(data){
+  data %>% ggplot(aes(x=year,y=fertility,color=country)) + 
+    geom_point() 
+}
+
+#load the wide data
+path <- system.file('extdata',package='dslabs')
+filename <- file.path(path,'fertility-two-countries-example.csv')
+wide_data <- read_csv(filename)
+head(wide_data)
+
+tidy_data_by_user <- wide_data %>% gather(year,fertility,-country)
+head(tidy_data)
+plotapply(tidy_data_by_user)
