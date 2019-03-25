@@ -44,12 +44,14 @@ max(sepal_wid_accuracy)
 max(petal_len_accuracy)
 max(petal_wid_accuracy)
 
-###test the opt train data
-petal_len_opt_cutoff <- petal_len_cutoff[which.max(petal_len_accuracy)]
-
-y_hat <- ifelse(test$Petal.Length > petal_len_opt_cutoff, 'virginica', 'versicolor') %>% 
-    factor(levels = levels(test$Species))
-mean(y_hat == test$Species)
+###extract opt cutoff (petal_len and petal_wid)
+# petal_len_opt_cutoff <- petal_len_cutoff[which.max(petal_len_accuracy)]
+# petal_wid_opt_cutoff <- petal_wid_cutoff[which.max(petal_wid_accuracy)]
+# 
+# y_hat <- ifelse(test$Petal.Length > petal_len_opt_cutoff | test$Petal.Width> petal_wid_opt_cutoff, 
+#                 'virginica', 'versicolor') %>% 
+#     factor(levels = levels(test$Species))
+# mean(y_hat == test$Species)
 
 
 ###test set
