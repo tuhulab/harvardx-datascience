@@ -67,8 +67,30 @@ max(petal_wid_accuracy)
 
 petal_len_cutoff <- seq(range(train$Petal.Length)[1],range(train$Petal.Length)[2],by=0.1)
 petal_wid_cutoff <- seq(range(train$Petal.Width)[1],range(train$Petal.Width)[2],by=0.1)
-combined_accuracy <- map_dbl(petal_wid_cutoff, function(x){
-  y_hat <- ifelse((train$Petal.Width > x) OR (train$Petal.Width>x), 'virginica', 'versicolor') %>% 
-    factor(levels = levels(test$Species))
+combined_cutoff <- expand.grid(petal_len_cutoff,petal_wid_cutoff=petal_wid_cutoff)
+# combined_compare <- function(cutoff=...) {
+#   y_hat <- ifelse(train$Petal.Length > cutoff[1]|train$Petal.Width > cutoff[2],
+#          'virginica', 'versicolor')
+#   mean(y_hat==train$Species)
+# }
+# 
+# sapply(combined_cutoff,combined_compare)
+# 
+# combined_accuracy <- map_dbl(combined_cutoff, function(x){
+#   y_hat <- ifelse((train$Petal.Width > x[,1]) | (train$Petal.Width>x[,2]), 'virginica', 'versicolor') %>% 
+#     factor(levels = levels(test$Species))
+#   mean(y_hat == train$Species)
+# })
+id <- sapply(seq(nrow(combined_cutoff)),function(i){
+  y_hat <- ifelse(train$Petal.Length > combined_cutoff[i,1] |
+           train$Petal.Width > combined_cutoff[i,2],
+         'virginica', 'versicolor')
   mean(y_hat == train$Species)
 })
+petal_len_opt <- combined_cutoff[which.max(id),][1] %>% pull() 
+petal_wid_opt <- combined_cutoff[which.max(id),][2] %>% pull() 
+
+#test in test set
+y_hat_test <- ifelse(test$Petal.Length > petal_len_opt & test$Petal.Width > petal_wid_opt, 'virginica', 'versicolor')
+mean(y_hat_test == test$Species)
+d

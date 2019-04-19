@@ -1,0 +1,70 @@
+---
+title: '"Tidy" High-throughout Analysis Data, Examplified by RNA sequencing data'
+author: "Tu Hu"
+date: "19 April 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+High-throughout analysis revolutionized biology and biochemical sciences. These disciplines were also brought into a big data generation. Such big data was characterized as high-dimensional (consists hundreds and thousands variables), computing and storage resources demanding (difficult for personal computer to handle the analysis tasks).
+
+Therefore, at the first place, when computing and storage resources were expensive and limited. The data storage mechanisms were designed for fitting the performance of "machine", rather than the habits of "human". 
+
+
+## Old fashioned three-table storage
+This essay examplified data "tidying" by a subset of GSE5859 gene expression dataset. GSE5859 is a open-source dataset storing gene expression assay results of a US population study[@GSE5859]. 
+
+This dataset was transformed to R format by Rafael A. Irizarry for tutorial purpose and available on GitHub.
+
+```{r Load Example Data, echo=TRUE, message=FALSE, warning=FALSE}
+library(devtools)
+install_github("genomicsclass/GSE5859Subset")
+library(GSE5859Subset)
+data(GSE5859Subset)
+```
+
+
+This dataset consists three tables: "geneAnnotation", "geneExpression", "sampleInfo". 
+
+```{r Dimensions of 3 tables}
+dim(geneAnnotation)
+dim(geneExpression)
+dim(sampleInfo)
+```
+
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+---
+references:
+- id: GSE5859
+  title: Common genetic variants account for differences in gene expression among ethnic groups
+  author:
+  - family: Spielman
+    given: Richard
+  container-title: Nature Genetics
+  volume: 39
+  URL: 'https://doi.org/10.1038/ng1955'
+  DOI: 10.1038/ng1955
+  issue: 7
+  publisher: Nature Publishing Group
+  page: 226-231
+  type: article-journal
+  issued:
+    year: 2007
+    month: 1
+---
+
+# References
