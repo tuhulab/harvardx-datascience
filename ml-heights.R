@@ -116,3 +116,5 @@ result1 <- mean(y_hat1 == y_test)
     group_by(g) %>%
     summarize(y = mean(y), x = mean(x)) %>%
   qplot(x, y, data =.)
+  
+  
