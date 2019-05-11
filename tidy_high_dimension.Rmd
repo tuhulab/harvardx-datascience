@@ -1,8 +1,10 @@
 ---
-title: '"Tidy" High-throughout Analysis Data, Examplified by RNA sequencing data'
+title: '"Tidy" High-throughout Analysis Data, Examplified by RNA Sequencing Data'
 author: "Tu Hu"
 date: "19 April 2019"
-output: html_document
+output:
+#  pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -10,11 +12,16 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 # Introduction
-High-throughout analysis revolutionized biology and biochemical sciences. These disciplines were also brought into a big data generation. Such big data was characterized as high-dimensional (consists hundreds and thousands variables), computing and storage resources demanding (difficult for personal computer to handle the analysis tasks).
+High-throughout analysis revolutionized biology and biochemical sciences. Because 
+These disciplines were also brought into a big data generation. Such big data was characterized as high-dimensional (consists hundreds and thousands variables), computing and storage resources demanding (difficult for personal computer to handle the analysis tasks).
 
 Therefore, at the first place, when computing and storage resources were expensive and limited. The data storage mechanisms were designed for fitting the performance of "machine", rather than the habits of "human". 
 
+## Tidy Format
+In a data analysis task, 80% of time is spent on cleaning and preparing the data.
 
+
+# Tidying RNA Sequencing Data 
 ## Old fashioned three-table storage
 This essay examplified data "tidying" by a subset of GSE5859 gene expression dataset. GSE5859 is a open-source dataset storing gene expression assay results of a US population study[@GSE5859]. 
 
@@ -35,6 +42,8 @@ dim(geneAnnotation)
 dim(geneExpression)
 dim(sampleInfo)
 ```
+
+
 
 
 ## Including Plots

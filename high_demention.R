@@ -5,6 +5,8 @@ data(GSE5859Subset)
 
 dim(geneExpression)
 dim(sampleInfo)
+dim(geneAnnotation)
+
 head(sampleInfo)
 sampleInfo$group
 
@@ -17,4 +19,6 @@ match(geneAnnotation$PROBEID,
 # how many samples were processed in "2005-06-27"
 sum(sampleInfo$date=="2005-06-27")
 
-# 
+library(tidyverse)
+
+left_join(geneExpression,sampleInfo,by="filename")
