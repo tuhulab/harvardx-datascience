@@ -63,12 +63,49 @@ class(x[,1:2])
 class(x[,1,drop=FALSE])
 
 
+mat <- matrix(1:15,5,3)
+as.vector(mat)
+
+qplot(as.vector(x),bins=30, color=I("black"))
+
+#remove some pixels 
+#do not overwrite original x
+new_x <- x
+new_x[new_x < 50] <- 0
+qplot(as.vector(new_x),bins=30, color=I("black"))
+
+mat <- matrix(1:15, 5, 3)
+mat[mat < 3] <- 0
+mat
+qplot(as.vector(mat),bins=15, color=I("black"))
+
+mat <- matrix(1:15, 5, 3)
+mat[mat > 6 & mat < 12] <- 0
+mat
 
 
+#binarizing the data
+bin_x <- x
+bin_x[bin_x < 255/2] <- 0
+bin_x[bin_x > 255/2] <- 1
 
 
+#use linear algebra to scale matrix
+(x-rowMeans(x))/rowSds(x)
 
 
+#exericse
+x <- matrix(1:15,3,5)
+sweep(x, 2, 1:ncol(x),"+")
+
+#exercise-Q6
+sum((x>50 & x <205)==TRUE)/(dim(x)[1]*dim(x)[2])
+
+
+set.seed(1995)
+ind <- which(mnist$train$labels %in% c(2,7)) %>% sample(500)
+x <- mnist$train$images[ind,]
+y <- mnist$train$labels[ind]
 
 
 
