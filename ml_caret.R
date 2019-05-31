@@ -56,11 +56,22 @@ dat %>%
 
 
 #Q3
+library(rpart)
 data("tissue_gene_expression")
 set.seed(1991)
 y <- tissue_gene_expression$y
 x <- tissue_gene_expression$x
+
 rpart_train <- train(x,y, 
-                     method= "rpart", 
+                     method= "rpart", control = rpart.control(minsplit = 0),
                      tuneGrid=data.frame(cp=seq(0,0.1,0.01)))
 confusionMatrix(rpart_train)
+plot(rpart_train$finalModel)
+text(rpart_train$finalModel)
+
+set.seed(1991)
+rf_train <- train(x,y,
+                  method="rf",
+                  tuneGrid = data.frame(mtry=seq(50, 200, 25)),
+                  nodesize=1)
+varImp.randomForest(rf_train)
