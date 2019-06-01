@@ -37,7 +37,7 @@ polls_2008 %>% ggplot(aes(day, margin)) +
   geom_smooth()
 
 
-##### exercise 1
+##### Q1
 library(tidyverse)
 library(purrr)
 library(pdftools)
@@ -76,14 +76,41 @@ dat <- map_df(str_split(pdf_text(fn), "\n"), function(s){
   filter(date <= "2018-05-01")
 
 span <- 60 / as.numeric(diff(range(dat$date)))
-fit_1 <- dat %>% mutate(x=as.numeric(date)) %>% loess(deaths ~ x, data=., span=span, degree=1)
-dat %>% mutate(smooth=predict(fit,as.numeric(date))) %>%
-  ggplot() + geom_point(aes(date,deaths)) + geom_line(aes(data,smooth), lwd=2, col=2)
-
-span <- 60 / as.numeric(diff(range(dat$date)))
-fit_2 <- dat %>% mutate(x = as.numeric(date)) %>% loess(deaths ~ x, data = ., span = span, degree = 1)
+fit <- dat %>% mutate(x = as.numeric(date)) %>% loess(deaths ~ x, data = ., span = span, degree = 1)
 dat %>% mutate(smooth = predict(fit, as.numeric(date))) %>%
   ggplot() +
   geom_point(aes(date, deaths)) +
   geom_line(aes(date, smooth), lwd = 2, col = 2)
 
+dat %>% 
+  mutate(smooth = predict(fit), day = yday(date), year = as.character(year(date))) %>%
+  ggplot(aes(day, smooth, col = year)) +
+  geom_line(lwd = 2)
+
+dat %>% 
+  mutate(smooth = predict(fit, as.numeric(date)), day = mday(date), year = as.character(year(date))) %>%
+  ggplot(aes(day, smooth, col = year)) +
+  geom_line(lwd = 2)
+
+dat %>% 
+  mutate(smooth = predict(fit, as.numeric(date)), day = yday(date), year = as.character(year(date))) %>%
+  ggplot(aes(day, smooth)) +
+  geom_line(lwd = 2)
+
+dat %>% 
+  mutate(smooth = predict(fit, as.numeric(date)), day = yday(date), year = as.character(year(date))) %>%
+  ggplot(aes(day, smooth, col = year)) +
+  geom_line(lwd = 2)
+
+
+#Q3
+library(broom)
+mnist_27$train %>% glm(y ~ x_2, family = "binomial", data = .) %>% tidy()
+
+mnist_27$train %>% ggplot(aes(x=x_2,y=y)) + geom_point()
+
+span <- (max(mnist_27$train$x_2) - min(mnist_27$train$x_2))/50
+fit <- loess(y~x_2, data=mnist_27$train)
+mnist_27$train %>% mutate(smooth=)
+
+qplot(x_2, y, data = mnist_27$train)
