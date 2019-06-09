@@ -74,4 +74,9 @@ rf_train <- train(x,y,
                   method="rf",
                   tuneGrid = data.frame(mtry=seq(50, 200, 25)),
                   nodesize=1)
-varImp.randomForest(rf_train)
+imp <- varImp(rf_train)
+
+fit_rpart <- rpart_train
+tree_terms <- as.character(unique(fit_rpart$finalModel$frame$var[!(fit_rpart$finalModel$frame$var == "<leaf>")]))
+tree_terms
+
